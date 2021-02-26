@@ -18,6 +18,8 @@
 package io.wazo.callkeep;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -32,6 +34,8 @@ import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -494,8 +498,10 @@ public class RNCallKeepModule extends ReactContextBaseJavaModule {
         if (!isConnectionServiceAvailable()) {
             return;
         }
-
-        if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
+        
+        // Go to <EnableAccountPreferenceActivity> screen directly, please notice that's depends of the manufacturer
+        Log.d("Callkeep", "Android manufacturer: " + Build.MANUFACTURER);
+        if (Build.MANUFACTURER.equalsIgnoreCase("Samsung") || Build.MANUFACTURER.equalsIgnoreCase("motorola")) {
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             intent.setComponent(new ComponentName("com.android.server.telecom",
@@ -504,6 +510,29 @@ public class RNCallKeepModule extends ReactContextBaseJavaModule {
             this.getAppContext().startActivity(intent);
             return;
         }
+
+        final Handler handler = new Handler();
+
+        new Thread(new Runnable() {
+            @SuppressLint("WrongConstant")
+            @Override
+            @TargetApi(23)
+            public void run() {
+                Log.d("CallKeep", "Waitinig for select account...");
+
+                if(hasPhoneAccount()) {
+                    Context context = getAppContext();
+                    String packageName = context.getApplicationContext().getPackageName();
+                    Intent focusIntent = context.getPackageManager().getLaunchIntentForPackage(packageName).cloneFilter();
+                    Activity activity = getCurrentActivity();
+
+                    focusIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    getReactApplicationContext().startActivity(focusIntent);
+                    return;
+                }
+                handler.postDelayed(this, 1000);
+            }
+        }).start();
 
         openPhoneAccountSettings();
     }
