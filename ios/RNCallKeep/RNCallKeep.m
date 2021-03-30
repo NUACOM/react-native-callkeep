@@ -744,6 +744,12 @@ RCT_EXPORT_METHOD(reportUpdatedCall:(NSString *)uuidString contactIdentifier:(NS
 #endif
     [self configureAudioSession];
     [self sendEventWithNameWrapper:RNCallKeepPerformAnswerCallAction body:@{ @"callUUID": [action.callUUID.UUIDString lowercaseString] }];
+    
+    NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:[action.callUUID.UUIDString lowercaseString]];
+    CXCallUpdate *callUpdate = [[CXCallUpdate alloc] init];
+    callUpdate.localizedCallerName = @"Connecting...";
+    [self.callKeepProvider reportCallWithUUID:uuid updated:callUpdate];
+    
     [action fulfill];
 }
 
