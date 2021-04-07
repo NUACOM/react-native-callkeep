@@ -524,7 +524,7 @@ public class RNCallKeepModule extends ReactContextBaseJavaModule {
         
         // Go to <EnableAccountPreferenceActivity> screen directly, please notice that's depends of the manufacturer
         Log.d("Callkeep", "Android manufacturer: " + Build.MANUFACTURER);
-        if (Build.MANUFACTURER.equalsIgnoreCase("Samsung") || Build.MANUFACTURER.equalsIgnoreCase("motorola")) {
+        if (Build.MANUFACTURER.equalsIgnoreCase("Samsung") || Build.MANUFACTURER.equalsIgnoreCase("motorola") || Build.MANUFACTURER.equalsIgnoreCase("oneplus")) {
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             intent.setComponent(new ComponentName("com.android.server.telecom",
