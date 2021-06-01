@@ -499,28 +499,25 @@ public class RNCallKeepModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        final Handler handler = new Handler();
-
-        new Thread(new Runnable() {
-            @SuppressLint("WrongConstant")
-            @Override
-            @TargetApi(23)
-            public void run() {
-                Log.d("CallKeep", "Waitinig for select account...");
-
-                if(hasPhoneAccount()) {
-                    Context context = getAppContext();
-                    String packageName = context.getApplicationContext().getPackageName();
-                    Intent focusIntent = context.getPackageManager().getLaunchIntentForPackage(packageName).cloneFilter();
-                    Activity activity = getCurrentActivity();
-
-                    focusIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    getReactApplicationContext().startActivity(focusIntent);
-                    return;
-                }
-                handler.postDelayed(this, 1000);
-            }
-        }).start();
+        // final Handler handler = new Handler();
+        // new Thread(new Runnable() {
+        //     @SuppressLint("WrongConstant")
+        //     @Override
+        //     @TargetApi(23)
+        //     public void run() {
+        //         Log.d("CallKeep", "Waitinig for select account...");
+        //         if(hasPhoneAccount()) {
+        //             Context context = getAppContext();
+        //             String packageName = context.getApplicationContext().getPackageName();
+        //             Intent focusIntent = context.getPackageManager().getLaunchIntentForPackage(packageName).cloneFilter();
+        //             Activity activity = getCurrentActivity();
+        //             focusIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //             getReactApplicationContext().startActivity(focusIntent);
+        //             return;
+        //         }
+        //         handler.postDelayed(this, 1000);
+        //     }
+        // }).start();
         
         // Go to <EnableAccountPreferenceActivity> screen directly, please notice that's depends of the manufacturer
         Log.d("Callkeep", "Android manufacturer: " + Build.MANUFACTURER);
