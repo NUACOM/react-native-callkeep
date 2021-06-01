@@ -55,6 +55,13 @@ class RNCallKeep {
     RNCallKeepModule.registerPhoneAccount();
   };
 
+  openPhoneAccounts = () => {
+    if (isIOS) {
+      return;
+    }
+    RNCallKeepModule.openPhoneAccounts();
+  };
+
   registerAndroidEvents = () => {
     if (isIOS) {
       return;
