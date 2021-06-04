@@ -11,7 +11,9 @@ declare module 'react-native-callkeep' {
     'didResetProvider' |
     'checkReachability' |
     'didPerformSetMutedCallAction' |
-    'didLoadWithEvents';
+    'didLoadWithEvents' |
+    'showIncomingCallUi' |
+    'silenceIncomingCall';
 
   type HandleType = 'generic' | 'number' | 'email';
 
@@ -32,7 +34,14 @@ declare module 'react-native-callkeep' {
       okButton: string,
       imageName?: string,
       additionalPermissions: string[],
-    },
+      selfManaged?: boolean,
+      foregroundService?: {
+        channelId: string,
+        channelName: string,
+        notificationTitle: string,
+        notificationIcon?: string
+      }
+    }
   }
 
   export type DidReceiveStartCallActionPayload = { handle: string };
@@ -41,7 +50,20 @@ declare module 'react-native-callkeep' {
   export type DidDisplayIncomingCallPayload = string | undefined;
   export type DidPerformSetMutedCallActionPayload = boolean;
 
+  export const CONSTANTS: {
+    END_CALL_REASONS: {
+      FAILED: 1,
+      REMOTE_ENDED: 2,
+      UNANSWERED: 3,
+      ANSWERED_ELSEWHERE: 4,
+      DECLINED_ELSEWHERE: 5 | 2,
+      MISSED: 2 | 6
+    }
+  };
+
   export default class RNCallKeep {
+    static getInitialEvents(): Promise<Array<Object>>
+
     static addEventListener(type: Events, handler: (args: any) => void): void
 
     static removeEventListener(type: Events): void
@@ -128,6 +150,12 @@ declare module 'react-native-callkeep' {
      */
     static setMutedCall(uuid: string, muted: boolean): void
 
+    /**
+     * @description toggleAudioRouteSpeaker method is available only on Android.
+     * @param uuid
+     * @param routeSpeaker
+     */
+    static toggleAudioRouteSpeaker(uuid: string, routeSpeaker: boolean): void
     static setOnHold(uuid: string, held: boolean): void
 
     /**
