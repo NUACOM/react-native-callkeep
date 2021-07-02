@@ -304,14 +304,14 @@ class RNCallKeep {
         options.alertTitle,
         options.alertDescription,
         [
-          {
-            text: options.cancelButton,
-            onPress: reject,
-            style: 'cancel',
-          },
+          //  {
+          //    text: options.cancelButton,
+          //    onPress: reject,
+          //    style: 'cancel',
+          //  },
           { text: options.okButton, onPress: () => resolve(true) },
         ],
-        { cancelable: true }
+        { cancelable: false }
       );
     });
 
